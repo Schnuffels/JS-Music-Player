@@ -25,16 +25,23 @@
         this.photo = obj.photo;
         this.progressPercent = '0.00%';
 
+        let testPlay = document.querySelectorAll(this.player);
+        if (testPlay.length > 1){
+            alert('一个对象只能对应一个 class');
+            return;
+        }
         mediaPlay = document.querySelector(this.player);
-        coverImg = document.querySelector(this.coverImg);
+        coverImg = document.querySelectorAll(this.coverImg);
         if (mediaPlay == null){
             alert('未找到播放器 audio 标签');
         }else if(coverImg == null){
             alert('未找到封面图 img 标签');
         } else{
             mediaPlay.setAttribute('src', this.music);
-            this.initCoverImg = coverImg.getAttribute('src');
-            coverImg.setAttribute('src',this.photo);
+            this.initCoverImg = coverImg[0].getAttribute('src');
+            for (let i = 0; i < coverImg.length; i++){
+                coverImg[i].setAttribute('src',this.photo);
+            }
 
             if (this.volume > 0.9){
                 this.volume = 1; mediaPlay.volume = 1;
@@ -124,7 +131,9 @@
     //使改变的曲目在播放器中生效
     MusicPlayerHCW.prototype.change = function () {
         mediaPlay.setAttribute('src',this.music);
-        coverImg.setAttribute('src',this.photo);
+        for (let i = 0; i < coverImg.length; i++){
+            coverImg[i].setAttribute('src',this.photo);
+        }
         mediaPlay.playbackRate = this.speed;
         endTimeChange = true;
         return this;
@@ -161,7 +170,9 @@
         mediaPlay.pause();
         mediaPlay.currentTime = 0;
         mediaPlay.setAttribute('src', '');
-        coverImg.setAttribute('src', this.initCoverImg);
+        for (let i = 0; i < coverImg.length; i++){
+            coverImg[i].setAttribute('src',this.initCoverImg);
+        }
         if (callback){callback();}
     };
 
@@ -303,9 +314,11 @@
 
     //设置播放进度
     MusicPlayerHCW.prototype.setPlayProgress = function (event, object) {
-        //计算点击位置的百分比
-        var currentValue = event.offsetX / object.offsetWidth;
-        mediaPlay.currentTime = mediaPlay.duration * currentValue;
+        if (!isNaN(mediaPlay.duration)){
+            //计算点击位置的百分比
+            var currentValue = event.offsetX / object.offsetWidth;
+            mediaPlay.currentTime = mediaPlay.duration * currentValue;
+        }
     };
 
     //获取缓冲进度
@@ -396,8 +409,11 @@
 
     //缓冲导致播放停止
     var buStopSwitch = false;
-    var buStop = function bufferUnexpectedStop() {
-        return;
+    var buStop = function bufferUnexpectedStop(callback) {
+        if (buStopSwitch){
+            return;
+        }
+        if(callback){callback()}
     };
 
     window.MusicPlayerHCW = MusicPlayerHCW;

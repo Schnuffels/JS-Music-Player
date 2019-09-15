@@ -37,11 +37,11 @@
     <!-- 播放器标签 -->
     <audio id="player" class="player" src="" ></audio>
 
-    <div style="margin-top: 20px;width: 440px;height: 100px;">
+    <div style="margin-top: 20px;width: 800px;height: 165px;">
         <div style="float: left;">
             <img id="cover_img" src="./image/default.jpg" alt="封面" width="80px">
         </div>
-        <div style="margin-left: 95px;width: 100%;height: 100px;">
+        <div style="float: left;margin-left: 10px;width: 435px;height: 155px;">
             <div style="width: 100%;height: 20px;">
                 <div class="startTime" style="float: left;">00:00</div>
                 <div class="endTime" style="float: right">00:00</div>
@@ -52,13 +52,15 @@
                 </div>
             </div>
             <div style="width: 100%;height: 50px;margin-top: 10px;">
-                <div>音量可视化展现：</div>
+                <div>音量可视化展现：（音量条是通过绑定监听器改变的）</div>
                 <div style="position: relative;width: 100px;margin-top: 2px;">
                     <div id="control_strip_volume" style="width: 0%"></div>
                     <div style="width: 100%;height: 15px;background: #26a3ec;"></div>
                 </div>
+                <div style="margin-top: 15px;font-size: 13px;border:1px solid #000"><span style="color: red;">监听器的作用在此，顶部的的音量按钮与可视化音量条元素毫无关系，但绑定了监听器后，可视化音量条就会受插件音量的变化发生改变。</span><span style="color: blue;">故此开发者在绑定监听器后，音量的控制方法转交由开发者自己设定，凡是改变了插件音量就会改变可视化音量条</span></div>
             </div>
         </div>
+        <div style="float: left; width: 260px; height: 35px; border: 1px solid black;font-size: 13px;margin-left: 10px;">绿色为进度条，黄色为缓冲条，蓝色为底背景条</div>
     </div>
 </body>
 <script type="text/javascript" src="js/MusicPlayerHCW.js"></script>
@@ -66,8 +68,8 @@
     var playerId = '.player';           //播放器 audio 标签
     var coverImgId = '#cover_img';      //封面图 img 标签
     /****** 音乐资源 ******/
-    var music = 'http://download.cwmoo.cn/MusicPlayerHCW/music/Voice.mp3';   //音乐资源1 （来源对象存储，可观察缓冲条）
-    var nextMusic = './source/Ari Pulkkinen - Title Theme.mp3';     //音乐资源2 （来源本地）
+    var music = 'http://download.cwmoo.cn/MusicPlayerHCW/music/Voice.mp3';   //音乐资源1 （来源对象存储，我不排除清空服务器音乐文件的可能）
+    var nextMusic = 'http://download.cwmoo.cn/MusicPlayerHCW/music/Ari Pulkkinen - Title Theme.mp3';     //音乐资源2 （来源对象存储，我不排除清空服务器音乐文件的可能））
     /****** 封面图资源 ******/
     var photo = './image/1.jpg';        //封面图1
     var nextPhoto = './image/2.jpg';    //封面图2
@@ -83,7 +85,7 @@
         });
 
         //播放按钮
-        var btnPlay = document.getElementById('btnPlay');
+        var btnPlay = document.querySelector('#btnPlay');
         btnPlay.addEventListener('click',function () {
             player.play();
 
@@ -99,25 +101,32 @@
         });
 
         //暂停按钮
-        var btnPause = document.getElementById('btnPause');
+        var btnPause = document.querySelector('#btnPause');
         btnPause.addEventListener('click',function () {
             player.pause();
         });
 
         //停止按钮
-        var btnStop = document.getElementById('btnStop');
+        var btnStop = document.querySelector('#btnStop');
+        var endTime = document.querySelector('.endTime');
+        var progressMusic = document.querySelector('#progressMusic');
+        var buffered = document.querySelector('#buffered');
         btnStop.addEventListener('click',function () {
-            player.stop();
+            player.stop(function () {
+                endTime.innerHTML = '00:00';
+                buffered.style.width = '0%';
+                progressMusic.style.width = '0%';
+            });
         });
 
         //上一曲
-        var prev = document.getElementById('prev');
+        var prev = document.querySelector('#prev');
         prev.addEventListener('click',function () {
             player.setMusic(music).setCoverImage(photo).change().play();
         });
 
         //下一曲
-        var next = document.getElementById('next');
+        var next = document.querySelector('#next');
         next.addEventListener('click',function () {
             player.setMusic(nextMusic).setCoverImage(nextPhoto).change().play();
         });
@@ -127,21 +136,21 @@
         volumeText.innerHTML = player.getVolume();
 
         //音量增加
-        var soundIncrease = document.getElementById('soundIncrease');
+        var soundIncrease = document.querySelector('#soundIncrease');
         soundIncrease.addEventListener('click',function () {
             player.volumeUp();
             volumeText.innerHTML = player.getVolume();
         });
 
         //音量降低
-        var soundDecreases = document.getElementById('soundDecreases');
+        var soundDecreases = document.querySelector('#soundDecreases');
         soundDecreases.addEventListener('click',function () {
             player.volumeDown();
             volumeText.innerHTML = player.getVolume();
         });
 
         //静音
-        var mute = document.getElementById('mute');
+        var mute = document.querySelector('#mute');
         mute.addEventListener('click',function () {
             if (player.mute()){     //判断当前是否处于静音状态，是就取消静音
                 player.mute(false);
@@ -155,13 +164,13 @@
         speedText.innerHTML = player.getSpeed();
 
         //速度+
-        var speedUp = document.getElementById('speedUp');
+        var speedUp = document.querySelector('#speedUp');
         speedUp.addEventListener('click',function () {
             player.speedUp();
             speedText.innerHTML = player.getSpeed();
         });
         //速度-
-        var peedDown = document.getElementById('peedDown');
+        var speedDown = document.querySelector('#speedDown');
         speedDown.addEventListener('click',function () {
             player.speedDown();
             speedText.innerHTML = player.getSpeed();
