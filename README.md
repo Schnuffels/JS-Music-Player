@@ -105,6 +105,11 @@ player.volumeDown();
 
 ```javascript
 player.addVolumeProgressEventListener(className);
+
+/**
+ * 请注意，以上监听器添加完毕后，通过本类方法改动音量大小音量条会实时发生改变。
+ * 如需要通过鼠标点击音量条改变大小，需要你另行设计一个透明元素通过定位方式悬浮在上方，且事件得您自己设计。
+ */
 ```
 
 >  静音
@@ -165,11 +170,6 @@ processBar.addEventListener('click', function(event){
 $('.processBar').on('click', function (event) {
     player.setPlayProgress(event, this);
 });
-
-/**
- * 请注意，以上监听器添加完毕后，通过本类方法改动音量大小音量条会实时发生改变。
- * 如需要通过鼠标点击音量条改变大小，需要你另行设计一个透明元素通过定位方式悬浮在上方，且事件得您自己设计。
- */
 ```
 
 >  添加一个进度条监听器
