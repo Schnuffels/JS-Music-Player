@@ -281,11 +281,19 @@
 
     //监听与更新音量进度条 (传入进度条类名)
     var volumeProgressMonitor;
-    MusicPlayerHCW.prototype.addVolumeProgressEventListener = function (className) {
+    MusicPlayerHCW.prototype.addVolumeProgressEventListener = function (className, type = null) {
         var vProgressObj = document.querySelector(className);
         var parent = this;
+        type = type == null ? 'horizontal' : type;
         volumeProgressMonitor = window.setInterval(function () {
-            vProgressObj.style.width = (parent.volume * 100) + '%'
+            switch (type) {
+                case 'horizontal':
+                    vProgressObj.style.width = (parent.volume * 100) + '%'
+                    break;
+                case 'vertical':
+                    vProgressObj.style.height = (parent.volume * 100) + '%'
+                    break;
+            }
         },100);
     };
 

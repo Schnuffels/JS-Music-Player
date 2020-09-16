@@ -102,9 +102,10 @@ player.volumeDown();
 >  添加一个音量控制条监听器
 
 * className 为你页面上，设计出来控制音量大小的控制条
+* type: horizontal | vertical 音量条方向，不设置默认为水平
 
 ```javascript
-player.addVolumeProgressEventListener(className);
+player.addVolumeProgressEventListener(className, type);
 
 /**
  * 请注意，以上监听器添加完毕后，通过本类方法改动音量大小音量条会实时发生改变。

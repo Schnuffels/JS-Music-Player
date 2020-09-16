@@ -68,8 +68,8 @@
     var playerId = '.player';           //播放器 audio 标签
     var coverImgId = '#cover_img';      //封面图 img 标签
     /****** 音乐资源 ******/
-    var music = '杨采钰 - 少年英雄小哪吒.mp3';   //音乐资源1 （来源对象存储，我不排除清空服务器音乐文件的可能）
-    var nextMusic = '呦猫UNEKO - 梦回还 (TV size).mp3';     //音乐资源2 （来源对象存储，我不排除清空服务器音乐文件的可能））
+    var music = 'http://oss.myyuming.cn/test2.mp3';   //音乐资源1 （来源对象存储，我不排除清空服务器音乐文件的可能）
+    var nextMusic = 'http://oss.myyuming.cn/test1.mp3';     //音乐资源2 （来源对象存储，我不排除清空服务器音乐文件的可能））
     /****** 封面图资源 ******/
     var photo = './image/1.jpg';        //封面图1
     var nextPhoto = './image/2.jpg';    //封面图2
@@ -179,7 +179,7 @@
         //初始化，监听进度条
         player.addProgressEventListener('#progressMusic','.startTime','.endTime');
         //初始化，监听音量控制条
-        player.addVolumeProgressEventListener('#control_strip_volume');
+        player.addVolumeProgressEventListener('#control_strip_volume','height');
         //初始化，监听缓冲条
         player.addBufferedProgressEventListener('#buffered');
         //初始化，监听播放状态
