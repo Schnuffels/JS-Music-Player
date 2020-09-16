@@ -24,6 +24,7 @@
         this.music = obj.music;
         this.photo = obj.photo;
         this.progressPercent = '0.00%';
+        this.state = false;
 
         let testPlay = document.querySelectorAll(this.player);
         if (testPlay.length > 1){
@@ -31,7 +32,9 @@
             return;
         }
         mediaPlay = document.querySelector(this.player);
-        coverImg = document.querySelectorAll(this.coverImg);
+        if (typeof (this.coverImg) != "undefined" && this.coverImg !== ''){
+            coverImg = document.querySelectorAll(this.coverImg);
+        }
         if (mediaPlay == null){
             alert('未找到播放器 audio 标签');
         }else if(coverImg == null){
@@ -141,6 +144,8 @@
 
     //播放
     MusicPlayerHCW.prototype.play = function (callback) {
+        this.state = true;
+        timerState = true;
         var tempMonitor = window.setInterval(function () {
             if (mediaPlay.getAttribute('src').toString() !== ''){
                 mediaPlay.play();
@@ -160,25 +165,47 @@
     };
 
     //暂停
+    let stopAfterPlayingRealMonitor;
     MusicPlayerHCW.prototype.pause = function (callback) {
+        this.state = false;
         mediaPlay.pause();
+        let clearStopMonitorCount = 10;
+        stopAfterPlayingRealMonitor = window.setInterval(function () {
+            window.clearInterval(afterPlayingRealMonitor);
+            clearStopMonitorCount--;
+            if (clearStopMonitorCount <= 0){
+                window.clearInterval(stopAfterPlayingRealMonitor);
+            }
+        },200);
+
         if (callback){callback();}
     };
 
     //停止
     MusicPlayerHCW.prototype.stop = function (callback) {
+        this.state = false;
         mediaPlay.pause();
+        window.clearInterval(afterPlayingRealMonitor);
         mediaPlay.currentTime = 0;
         mediaPlay.setAttribute('src', '');
         for (let i = 0; i < coverImg.length; i++){
             coverImg[i].setAttribute('src',this.initCoverImg);
         }
+
+        let clearStopMonitorCount = 10;
+        let stopPrevMonitor = window.setInterval(function () {
+            window.clearInterval(afterPlayingRealMonitor);
+            clearStopMonitorCount--;
+            if (clearStopMonitorCount <= 0){
+                window.clearInterval(stopPrevMonitor);
+            }
+        },200);
         if (callback){callback();}
     };
 
     //获取音乐播放状态
     MusicPlayerHCW.prototype.getPlayStatus = function () {
-        return !mediaPlay.paused;
+        return this.state;
     };
 
     //监听音乐播放状态发生改变时执行的结果（回调1：正在播放，回调2：无播放）
@@ -188,15 +215,17 @@
         var timerState = true;              //放开闸口1次
         playStatusMonitor = window.setInterval(function () {
             //闸口
-            implementState = mediaPlay.paused == timerState ? false : true;
+            implementState = mediaPlay.paused != timerState;
             //播放与暂停状态
             if (implementState){
                 timerState = !timerState;
                 implementState = false;
                 if (!mediaPlay.paused){
                     if (callback1){callback1()}
+                    this.state = true;
                 }else{
                     if (callback2){callback2()}
+                    this.state = false;
                 }
             }
         },300);
@@ -337,6 +366,28 @@
         },500);
     };
 
+    //播放完成后监听器
+    var afterPlayingMonitor;
+    var afterPlayingRealMonitor;
+    var timerState = true;
+    MusicPlayerHCW.prototype.addAfterPlayingListener = function(callback){
+        let implementState = false;
+        afterPlayingMonitor = window.setInterval(function () {
+            let startTime = formateTime(mediaPlay.currentTime);
+            let totalTime = formateTime(mediaPlay.duration) === '0NaN:0NaN' ? '00:00' : formateTime(mediaPlay.duration);
+            if (startTime === totalTime && totalTime !== '00:00'){
+                implementState =  mediaPlay.paused === timerState;
+                if (implementState){
+                    timerState = !timerState;
+                    implementState = false;
+                    afterPlayingRealMonitor = setTimeout(function () {
+                        if(callback){callback();}
+                    },2000);
+                }
+            }
+        },500);
+    };
+
     //获取“进度条”监听器
     MusicPlayerHCW.prototype.getMonitorProgress = function () {
         monitor = progressMonitor;
@@ -361,12 +412,19 @@
         return this;
     };
 
+    //获取“播放完成后触发”监听器
+    MusicPlayerHCW.prototype.getMonitorAfterPlaying = function () {
+        monitor = afterPlayingMonitor;
+        return this;
+    };
+
     //清理全部监听器
     MusicPlayerHCW.prototype.clearMonitor = function () {
         window.clearInterval(progressMonitor);
         window.clearInterval(volumeProgressMonitor);
         window.clearInterval(bufferedMonitor);
         window.clearInterval(playStatusMonitor);
+        window.clearInterval(afterPlayingMonitor);
     };
 
     //清除指定监听器

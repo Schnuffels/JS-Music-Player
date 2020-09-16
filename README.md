@@ -156,10 +156,15 @@ player.getProgress();
 * 需要外部给进度条元素单独添加监听器，function 中 传入 event
 * event 鼠标点击元素事件
 * object 监听器监听对象
+* 请注意，是给进度条的最外层盒子设置这个点击事件，而不是进度条本身
 
 ```javascript
 player.setPlayProgress(event, object);
+```
 
+>  【接上部分】设置并改变音乐播放进度（Javascript, jQuery）调用方法
+
+```javascript
 //JS 外部调用 setPlayProgress
 var processBar = document.querySelector('.processBar');
 processBar.addEventListener('click', function(event){
@@ -169,6 +174,26 @@ processBar.addEventListener('click', function(event){
 //jQuery 外部调用 setPlayProgress 
 $('.processBar').on('click', function (event) {
     player.setPlayProgress(event, this);
+});
+```
+
+>  【接上部分】设置并改变音乐播放进度（Vue）调用方法
+
+HTML部分：
+```html
+<div @click="switchProgress($event)" ref="switchProgress">...</div>
+```
+
+JS部分：
+```javascript
+//Vue.js 外部调用 setPlayProgress
+const xxx = new Vue({
+    el:'xxx',
+    methods:{
+        switchProgress(event){
+            player.setPlayProgress(event, this.$refs.switchProgress);
+        }
+    }
 });
 ```
 
@@ -210,6 +235,16 @@ player.addPlayStatusEventListener(function () {
     //如果正在播放则执行
 },function () {
     //如果无播放则执行
+});
+```
+
+>  添加一个播放完成后触发监听器
+
+* 本监听器仅音乐自动播放完成后触发1次
+
+```javascript
+player.addAfterPlayingListener(function () {
+    //播放完成后执行
 });
 ```
 
