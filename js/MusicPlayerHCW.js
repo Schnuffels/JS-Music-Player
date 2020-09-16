@@ -25,6 +25,7 @@
         this.photo = obj.photo;
         this.progressPercent = '0.00%';
         this.state = false;
+        this.actionAfter = [];
 
         let testPlay = document.querySelectorAll(this.player);
         if (testPlay.length > 1){
@@ -158,25 +159,22 @@
     };
 
     //设置播放完成后执行的动作 (自定义传参参数，回调函数)
-    MusicPlayerHCW.prototype.setActionsAfterPlayback = function (object, callback) {
+    MusicPlayerHCW.prototype.setActionsAfterPlayback = function (flag, callback) {
+        for (let i = 0; i < this.actionAfter.length; i++){
+            if (this.actionAfter[i] === flag){
+                return;
+            }
+        }
+        this.actionAfter.push(flag);
         mediaPlay.addEventListener('ended',function () {
-            if (callback){callback(object)}
+            if (callback){callback()}
         });
     };
 
     //暂停
-    let stopAfterPlayingRealMonitor;
     MusicPlayerHCW.prototype.pause = function (callback) {
         this.state = false;
         mediaPlay.pause();
-        let clearStopMonitorCount = 10;
-        stopAfterPlayingRealMonitor = window.setInterval(function () {
-            window.clearInterval(afterPlayingRealMonitor);
-            clearStopMonitorCount--;
-            if (clearStopMonitorCount <= 0){
-                window.clearInterval(stopAfterPlayingRealMonitor);
-            }
-        },200);
 
         if (callback){callback();}
     };
@@ -374,28 +372,6 @@
         },500);
     };
 
-    //播放完成后监听器
-    var afterPlayingMonitor;
-    var afterPlayingRealMonitor;
-    var timerState = true;
-    MusicPlayerHCW.prototype.addAfterPlayingListener = function(callback){
-        let implementState = false;
-        afterPlayingMonitor = window.setInterval(function () {
-            let startTime = formateTime(mediaPlay.currentTime);
-            let totalTime = formateTime(mediaPlay.duration) === '0NaN:0NaN' ? '00:00' : formateTime(mediaPlay.duration);
-            if (startTime === totalTime && totalTime !== '00:00'){
-                implementState =  mediaPlay.paused === timerState;
-                if (implementState){
-                    timerState = !timerState;
-                    implementState = false;
-                    afterPlayingRealMonitor = setTimeout(function () {
-                        if(callback){callback();}
-                    },2000);
-                }
-            }
-        },500);
-    };
-
     //获取“进度条”监听器
     MusicPlayerHCW.prototype.getMonitorProgress = function () {
         monitor = progressMonitor;
@@ -420,19 +396,12 @@
         return this;
     };
 
-    //获取“播放完成后触发”监听器
-    MusicPlayerHCW.prototype.getMonitorAfterPlaying = function () {
-        monitor = afterPlayingMonitor;
-        return this;
-    };
-
     //清理全部监听器
     MusicPlayerHCW.prototype.clearMonitor = function () {
         window.clearInterval(progressMonitor);
         window.clearInterval(volumeProgressMonitor);
         window.clearInterval(bufferedMonitor);
         window.clearInterval(playStatusMonitor);
-        window.clearInterval(afterPlayingMonitor);
     };
 
     //清除指定监听器

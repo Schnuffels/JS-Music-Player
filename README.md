@@ -240,12 +240,13 @@ player.addPlayStatusEventListener(function () {
 });
 ```
 
->  添加一个播放完成后触发监听器
+>  添加一个播放完成后触发的动作
 
-* 本监听器仅音乐自动播放完成后触发1次
-
+* flag 给此动作设置一个标识（请确保不同动作的内容标识的唯一性）
+* 音乐播放完成后触发1次该动作，该动作可以被无限制设置在任何地方并且无数次调用，以便监听播放完成后执行不同的动作内容
+* 如果在需要被反复调用的方法里面设置监听器，则相同标识的动作不会被反复设置
 ```javascript
-player.addAfterPlayingListener(function () {
+player.setActionsAfterPlayback(flag, function () {
     //播放完成后执行
 });
 ```
