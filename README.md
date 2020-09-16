@@ -24,6 +24,7 @@ var player = new MusicPlayerHCW(playerId,coverImgId,{
 });
 //使用 jQuery框架 需特别注意，上面初始化播放器的代码须放在 $(function(){}) 外面
 //默认情况下，上面的方法写在js脚本最外层，下面的“调用方法”全部写在 window.onlooad 或者 $(function(){}) 中
+//VUE项目，要操作的标签如果有用到VUE，则需要先进行编译，播放器对象创建语句应该放在对应的VUE语句之后
 ```
 
 
