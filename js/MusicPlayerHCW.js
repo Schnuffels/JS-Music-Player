@@ -183,21 +183,11 @@
     MusicPlayerHCW.prototype.stop = function (callback) {
         this.state = false;
         mediaPlay.pause();
-        window.clearInterval(afterPlayingRealMonitor);
         mediaPlay.currentTime = 0;
         mediaPlay.setAttribute('src', '');
         for (let i = 0; i < coverImg.length; i++){
             coverImg[i].setAttribute('src',this.initCoverImg);
         }
-
-        let clearStopMonitorCount = 10;
-        let stopPrevMonitor = window.setInterval(function () {
-            window.clearInterval(afterPlayingRealMonitor);
-            clearStopMonitorCount--;
-            if (clearStopMonitorCount <= 0){
-                window.clearInterval(stopPrevMonitor);
-            }
-        },200);
         if (callback){callback();}
     };
 
