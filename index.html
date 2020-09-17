@@ -45,7 +45,7 @@
             <div style="width: 100%;height: 20px;">
                 <div class="startTime" style="float: left;">00:00</div>
                 <div class="endTime" style="float: right">00:00</div>
-                <div style="width: 340px;height: 15px;margin: 0 auto;position: relative;top: 3px;">
+                <div id="progressMusicBox" style="width: 340px;height: 15px;margin: 0 auto;position: relative;top: 3px;">
                     <div id="progressMusic" style="position: absolute;width: 0%;height: 15px;background: green;z-index: 99"></div>
                     <div id="buffered" style="position: absolute;width: 0%;height: 15px;background: orange;"></div>
                     <div style="width: 100%;height: 15px;background: #26a3ec;"></div>
@@ -161,7 +161,6 @@
             player.setVolumeProgress(event, this);   //传入 event 与 this
         });
 
-
         //静音
         var mute = document.querySelector('#mute');
         mute.addEventListener('click',function () {
@@ -170,6 +169,12 @@
             }else{
                 player.mute(true);  //静音
             }
+        });
+
+        //JS 外部调用 setPlayProgress
+        var progressMusicBox = document.querySelector('#progressMusicBox');
+        progressMusicBox.addEventListener('click', function(event){
+            player.setPlayProgress(event, this);   //传入 event 与 this
         });
 
         //速度HTML显示文本
