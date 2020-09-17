@@ -99,6 +99,38 @@ player.volumeUp();
 //音量降低
 player.volumeDown();
 ```
+>  设置音量进度条绑定点击事件
+
+* event 传入鼠标点击元素事件
+* object 监听器监听对象
+* type 音量进度条方向（请务必确保与音量控制条监听器绑定方向相同）
+```javascript
+//设置绑定音量控制条点击事件
+player.setVolumeProgress(event, this, type);
+
+//JS 外部调用 setPlayProgress
+var volumeBar = document.querySelector('.volumeBar');
+volumeBar.addEventListener('click', function(event){
+   player.setVolumeProgress(event, this);   //传入 event 与 this
+});
+
+//jQuery 外部调用 setPlayProgress 
+$('.volumeBar').on('click', function (event) {
+    player.setVolumeProgress(event, this);
+});
+
+// Vue HTML部分
+// <div @click="switchVolumeProgress($event)" ref="switchVolumeProgress">...</div>
+// Vue.js 外部调用 setPlayProgress
+const xxx = new Vue({
+    el:'xxx',
+    methods:{
+        switchProgress(event){
+            player.switchVolumeProgress(event, this.$refs.switchVolumeProgress);
+        }
+    }
+});
+```
 
 >  添加一个音量控制条监听器
 
@@ -161,12 +193,9 @@ player.getProgress();
 * 请注意，是给进度条的最外层盒子设置这个点击事件，而不是进度条本身
 
 ```javascript
+//设置绑定音乐进度条点击事件
 player.setPlayProgress(event, object);
-```
 
->  【接上部分】设置并改变音乐播放进度（Javascript, jQuery）调用方法
-
-```javascript
 //JS 外部调用 setPlayProgress
 var processBar = document.querySelector('.processBar');
 processBar.addEventListener('click', function(event){
@@ -177,18 +206,10 @@ processBar.addEventListener('click', function(event){
 $('.processBar').on('click', function (event) {
     player.setPlayProgress(event, this);
 });
-```
 
->  【接上部分】设置并改变音乐播放进度（Vue）调用方法
-
-HTML部分：
-```html
-<div @click="switchProgress($event)" ref="switchProgress">...</div>
-```
-
-JS部分：
-```javascript
-//Vue.js 外部调用 setPlayProgress
+// Vue.js HTLM部分
+// <div @click="switchProgress($event)" ref="switchProgress">...</div>
+// Vue.js 外部调用 setPlayProgress
 const xxx = new Vue({
     el:'xxx',
     methods:{

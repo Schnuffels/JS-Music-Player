@@ -220,10 +220,31 @@
     };
 
     //声音调整(number为空：返回系统音量值|0.0-1.0：音量阈值)
-    MusicPlayerHCW.prototype.setVolume = function (number) {
+    MusicPlayerHCW.prototype.setVolume = function (number, type) {
         mediaPlay.volume = number;
         this.volume = number;
         return this;
+    };
+
+    //设置音量进度条
+    MusicPlayerHCW.prototype.setVolumeProgress = function(event, object, type){
+        let currentValue;
+        type = type == null ? 'horizontal' : type;
+        switch (type) {
+            case 'horizontal':
+                currentValue = event.offsetX / object.offsetWidth;
+                break;
+            case 'vertical':
+                currentValue = event.offsetY / object.offsetHeight;
+                break;
+        }
+        if (currentValue > 0.95){
+            currentValue = 1;
+        }else if (currentValue < 0.05){
+            currentValue = 0;
+        }
+        mediaPlay.volume = currentValue;
+        this.volume = currentValue;
     };
 
     //获取系统音量值
@@ -276,10 +297,10 @@
         volumeProgressMonitor = window.setInterval(function () {
             switch (type) {
                 case 'horizontal':
-                    vProgressObj.style.width = (parent.volume * 100) + '%'
+                    vProgressObj.style.width = (parent.volume * 100) + '%';
                     break;
                 case 'vertical':
-                    vProgressObj.style.height = (parent.volume * 100) + '%'
+                    vProgressObj.style.height = (parent.volume * 100) + '%';
                     break;
             }
         },100);

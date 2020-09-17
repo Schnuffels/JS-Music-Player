@@ -53,7 +53,7 @@
             </div>
             <div style="width: 100%;height: 50px;margin-top: 10px;">
                 <div>音量可视化展现：（音量条是通过绑定监听器改变的）</div>
-                <div style="position: relative;width: 100px;margin-top: 2px;">
+                <div id="control_strip_volume_box" style="position: relative;width: 100px;margin-top: 2px;">
                     <div id="control_strip_volume" style="width: 0%"></div>
                     <div style="width: 100%;height: 15px;background: #26a3ec;"></div>
                 </div>
@@ -154,6 +154,13 @@
             player.volumeDown();
             volumeText.innerHTML = player.getVolume();
         });
+
+        //绑定音量控制条点击事件
+        var volumeBar = document.querySelector('#control_strip_volume_box');
+        volumeBar.addEventListener('click', function(event){
+            player.setVolumeProgress(event, this);   //传入 event 与 this
+        });
+
 
         //静音
         var mute = document.querySelector('#mute');
