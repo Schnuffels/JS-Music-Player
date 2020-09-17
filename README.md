@@ -24,6 +24,7 @@ var player = new MusicPlayerHCW(playerId,coverImgId,{
 });
 //使用 jQuery框架 需特别注意，上面初始化播放器的代码须放在 $(function(){}) 外面
 //默认情况下，上面的方法写在js脚本最外层，下面的“调用方法”全部写在 window.onlooad 或者 $(function(){}) 中
+//VUE项目，要操作的标签如果有用到VUE，则需要先进行编译，播放器对象创建语句应该放在对应的VUE语句之后
 ```
 
 
@@ -239,12 +240,15 @@ player.addPlayStatusEventListener(function () {
 });
 ```
 
->  添加一个播放完成后触发监听器
+>  添加一个播放完成后触发的动作
 
-* 本监听器仅音乐自动播放完成后触发1次
-
+* flag 给此动作设置一个标识（请确保不同动作的内容标识的唯一性）
+* 设置 flag 是为了保证标识相同的动作行为只被定义一次
+* 音乐播放完成后触发1次该动作
+* 该动作可以被无限制、在任何地方定义，以便监听播放完成后执行丰富且不同的动作内容
+* flag作用说明，如果在需要被反复调用的方法里面设置该动作，则相同标识的动作只会被定义1次，不会被反复定义
 ```javascript
-player.addAfterPlayingListener(function () {
+player.setActionsAfterPlayback(flag, function () {
     //播放完成后执行
 });
 ```
@@ -276,8 +280,12 @@ player.speedDown();
 >  获取当前播放的音乐地址
 
 * type: relative | absolutely
-* relative 相对路劲、absolutely 绝对路劲
+* relative 相对路径、absolutely 绝对路径
 ```javascript
+//假设网站域名且域名后目录为 http://xxx.xxx.com/test/  audio的src为  /static/source/music.mp3
+//相对路径 /static/source/music.mp3
+//绝对路径 http://xxx.xxx.com/test/static/source/music.mp3
+//如果引用的是完整的对象存储或者URL，则两者使用上无差别
 player.getMusicSrc('relative');
 ```
 
