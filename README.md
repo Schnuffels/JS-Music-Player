@@ -125,8 +125,8 @@ $('.volumeBar').on('click', function (event) {
 const xxx = new Vue({
     el:'xxx',
     methods:{
-        switchProgress(event){
-            player.switchVolumeProgress(event, this.$refs.switchVolumeProgress);
+        switchVolumeProgress(event){
+            player.setVolumeProgress(event, this.$refs.switchVolumeProgress);
         }
     }
 });
