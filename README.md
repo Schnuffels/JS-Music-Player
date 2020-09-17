@@ -108,20 +108,20 @@ player.volumeDown();
 //设置绑定音量控制条点击事件
 player.setVolumeProgress(event, this, type);
 
-//JS 外部调用 setPlayProgress
+//JS 外部调用 setVolumeProgress
 var volumeBar = document.querySelector('.volumeBar');
 volumeBar.addEventListener('click', function(event){
    player.setVolumeProgress(event, this);   //传入 event 与 this
 });
 
-//jQuery 外部调用 setPlayProgress 
+//jQuery 外部调用 setVolumeProgress 
 $('.volumeBar').on('click', function (event) {
     player.setVolumeProgress(event, this);
 });
 
 // Vue HTML部分
 // <div @click="switchVolumeProgress($event)" ref="switchVolumeProgress">...</div>
-// Vue.js 外部调用 setPlayProgress
+// Vue.js 外部调用 setVolumeProgress
 const xxx = new Vue({
     el:'xxx',
     methods:{
