@@ -1,4 +1,4 @@
-# MusicPlayerHCW
+# MusicPlayer
 一款好用的H5音乐播放器封装类
 
 ## 使用方法
@@ -16,7 +16,7 @@
 
 ```javascript
 //创建播放器对象
-var player = new MusicPlayerHCW(playerId,coverImgId,{
+var player = new MusicPlayer(playerId,coverImgId,{
     'volume':0.5,       //初始音量大小（可以不设置）
     'speed':1,          //初始播放速度（可以不设置）
     'music':music,      //初始音乐播放路径
