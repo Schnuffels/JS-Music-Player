@@ -63,13 +63,13 @@
         <div style="float: left; width: 260px; height: 35px; border: 1px solid black;font-size: 13px;margin-left: 10px;">绿色为进度条，黄色为缓冲条，蓝色为底背景条</div>
     </div>
 </body>
-<script type="text/javascript" src="js/MusicPlayerHCW.js"></script>
+<script type="text/javascript" src="js/MusicPlayer.js"></script>
 <script>
     var playerId = '.player';           //播放器 audio 标签
     var coverImgId = '#cover_img';      //封面图 img 标签
     /****** 音乐资源 ******/
-    var music = 'http://oss.myyuming.cn/test2.mp3';   //音乐资源1 （来源对象存储，我不排除清空对象存储音乐文件的可能）
-    var nextMusic = 'http://oss.myyuming.cn/test.mp3';     //音乐资源2 （来源对象存储，我不排除清空对象存储音乐文件的可能）
+    var music = 'http://download.cwmoo.cn/upload/list25/sublist70/1557496522.mp3';   //音乐资源1 （来源对象存储，我不排除清空对象存储音乐文件的可能）
+    var nextMusic = 'http://download.cwmoo.cn/upload/list25/sublist70/1557496774.mp3';     //音乐资源2 （来源对象存储，我不排除清空对象存储音乐文件的可能）
     /****** 封面图资源 ******/
     var photo = './image/1.jpg';        //封面图1
     var nextPhoto = './image/2.jpg';    //封面图2
@@ -78,7 +78,7 @@
     window.onload = function (ev) {
 
         //创建播放器对象
-        var player = new MusicPlayerHCW(playerId,coverImgId,{
+        var player = new MusicPlayer(playerId,coverImgId,{
             'volume':0.5,       //初始音量大小（可以不设置）
             'music':music,      //初始音乐播放路径
             'photo':photo       //初始封面图
@@ -159,6 +159,7 @@
         var volumeBar = document.querySelector('#control_strip_volume_box');
         volumeBar.addEventListener('click', function(event){
             player.setVolumeProgress(event, this);   //传入 event 与 this
+            volumeText.innerHTML = player.getVolume();
         });
 
         //静音
